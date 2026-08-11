@@ -1,0 +1,67 @@
+# The canonical claims file (governance chapter §12.1/§12.3 of the
+# lookbook — patchward_lookbook_v1_2026-08-11.md). Every dated fact the
+# site states pulls from here. Nothing gets hand-copied into a page —
+# that discipline is the direct structural fix for the class of bug
+# this project has hit repeatedly: the "371 tests" staleness, the
+# RepoMend branding leak, the mismatched mpfb2 proof link. If it isn't
+# here, it doesn't get stated as fact anywhere on the site.
+#
+# Every entry carries `verified` (date) and `source` — no fact ships
+# without a traceable origin, and staleness is visible by inspection
+# rather than silent.
+
+- id: test-count
+  value: "565 passed, 3 skipped"
+  verified: 2026-08-08
+  source: "Yehor's machine, Python 3.14.4 — real gate run, not self-reported"
+
+- id: coverage
+  value: "91.20%"
+  verified: 2026-08-08
+  source: "Yehor's machine, Python 3.14.4 — same run as test-count"
+
+- id: scanner-list
+  value: "Semgrep, Bandit, pip-audit, Trivy, ESLint"
+  verified: 2026-08-11
+  source: "src/patchward/ pipeline source, directly inspected"
+
+- id: pilot-delivery
+  value: "CLI, run by Yehor directly against the customer's own repository"
+  verified: 2026-08-11
+  source: >-
+    Triangulated from three independent Tier-0 findings: the live
+    callmedai.com pilot CTA is a plain mailto: link with no App-install
+    flow; the one real example PR (checkdmarc#261) was opened from a
+    personal fork six weeks before the hosted path could push a PR with
+    a working token (item 21 shipped 2026-08-05); and Patchward's own
+    project memory still names "first paying Marketplace install" as an
+    open goal as of its most recent session close. See build doc
+    Decision 9.
+
+- id: gate-3-behavior
+  value: >-
+    Runs against your real test suite in the normal (CLI-delivered)
+    case. On the hosted webhook path, when no test runner is present,
+    Gate 3 skips and the PR discloses this explicitly rather than
+    proceeding silently or failing the whole fix.
+  verified: 2026-08-11
+  source: "webhook.py / pipeline.py source, §5/C2 decision (2026-08-01), build doc D7 + D8 + Decision 9"
+
+- id: anthropic-data-boundary
+  value: >-
+    The triage and fix-generation stages send repository file contents
+    to the Anthropic API to do their work. Credential scrubbing applies
+    to Patchward's own CLI output and logs — not to what is sent to
+    Anthropic.
+  verified: 2026-08-11
+  source: "credential_proxy.py / fix_gen.py source trace, build doc D11"
+
+- id: install-command
+  value: "uv tool install patchward"
+  verified: 2026-08-11
+  source: "callmedai.com live copy, cross-checked against real patchward --help output"
+
+- id: python-requirement
+  value: ">=3.12"
+  verified: 2026-08-11
+  source: "pyproject.toml"

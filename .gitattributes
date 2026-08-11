@@ -1,0 +1,12 @@
+# Same normalisation that fixed the CRLF phantom-diff problem on the
+# Patchward repo (132f47a) — born with this file instead of discovering
+# the need for it after the fact.
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.png binary
+*.jpg binary
+*.webp binary
+*.ico binary
+*.pdf binary

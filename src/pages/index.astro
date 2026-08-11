@@ -1,0 +1,129 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getEntry } from 'astro:content';
+
+// Every stated number on this page is pulled from the facts
+// collection, not hand-typed — this is the governance chapter's
+// single-source model actually wired up, not just described.
+const testCount = await getEntry('facts', 'test-count');
+const coverage = await getEntry('facts', 'coverage');
+const pilotDelivery = await getEntry('facts', 'pilot-delivery');
+---
+
+<Layout
+  title="Patchward — security fixes that show their work"
+  description="Patchward runs five real scanners on your Python repo and opens one bounded fix PR at a time, with a receipt that states exactly what it checked."
+>
+  <section style="padding:96px 0 80px;">
+    <div style="font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:20px;">
+      local-first security agent
+    </div>
+    <h1 style="font-size:52px; font-weight:700; line-height:1.12; letter-spacing:-0.01em; max-width:720px;">
+      Security fixes that show their work.
+    </h1>
+    <p style="font-size:19px; color:var(--text-secondary); max-width:640px; margin:24px 0 36px; line-height:1.6;">
+      AI can produce a plausible patch around an unsafe import, dependency, or exception path in
+      seconds. Plausible is not verified. Patchward runs five real scanners on your Python repo
+      and opens one bounded fix PR at a time — with a receipt that states exactly what it checked.
+    </p>
+    <div style="display:flex; gap:16px; align-items:center;">
+      <a href="mailto:yehor@callmedai.com?subject=Patchward%20pilot" style="font-family:'JetBrains Mono', monospace; font-size:14px; font-weight:500; background:var(--accent); color:var(--canvas); padding:13px 22px; border-radius:4px; text-decoration:none; display:inline-block; border:none;">
+        Request a pilot →
+      </a>
+      <a href="#mechanism" style="font-family:'JetBrains Mono', monospace; font-size:14px; color:var(--link); text-decoration:none;">
+        See how it works
+      </a>
+    </div>
+  </section>
+
+  <section id="mechanism" style="padding:64px 0; border-top:1px solid var(--hairline);">
+    <div style="font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      mechanism
+    </div>
+    <h2 style="font-size:28px; font-weight:700; margin-bottom:16px; max-width:600px;">
+      Five scanners, one focused fix, three gates.
+    </h2>
+    <p style="color:var(--text-secondary); font-size:16px; max-width:640px; margin-bottom:40px;">
+      Static analysis runs entirely on-premise in a network-isolated sandbox. Findings are
+      normalized, triaged, and handed to a fix generator that writes one targeted patch —
+      validated before it ever reaches a pull request.
+    </p>
+
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:48px;">
+      <span class="mono" style="font-size:13px; padding:8px 14px; border:1px solid var(--hairline); border-radius:4px; background:var(--surface);">semgrep</span>
+      <span style="color:var(--text-secondary); font-size:14px;">+</span>
+      <span class="mono" style="font-size:13px; padding:8px 14px; border:1px solid var(--hairline); border-radius:4px; background:var(--surface);">bandit</span>
+      <span style="color:var(--text-secondary); font-size:14px;">+</span>
+      <span class="mono" style="font-size:13px; padding:8px 14px; border:1px solid var(--hairline); border-radius:4px; background:var(--surface);">pip-audit</span>
+      <span style="color:var(--text-secondary); font-size:14px;">+</span>
+      <span class="mono" style="font-size:13px; padding:8px 14px; border:1px solid var(--hairline); border-radius:4px; background:var(--surface);">trivy</span>
+      <span style="color:var(--text-secondary); font-size:14px;">+</span>
+      <span class="mono" style="font-size:13px; padding:8px 14px; border:1px solid var(--hairline); border-radius:4px; background:var(--surface);">eslint</span>
+      <span style="color:var(--text-secondary); font-size:14px;">→</span>
+      <span class="mono" style="font-size:13px; padding:8px 14px; border:1px solid var(--accent); border-radius:4px; color:var(--accent);">sarif</span>
+    </div>
+
+    <div style="display:grid; grid-template-columns:140px 1fr 100px; gap:16px; align-items:center; padding:16px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+      <span class="mono" style="font-weight:500;">gate 1</span>
+      <span style="color:var(--text-secondary);">re-scan confirms the flagged rule no longer fires</span>
+      <span class="mono" style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:3px; text-align:center; background:color-mix(in srgb, var(--pass) 15%, transparent); color:var(--pass);">✓ pass</span>
+    </div>
+    <div style="display:grid; grid-template-columns:140px 1fr 100px; gap:16px; align-items:center; padding:16px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+      <span class="mono" style="font-weight:500;">gate 2</span>
+      <span style="color:var(--text-secondary);">diff-bounds check confirms the edit stays within authorised lines</span>
+      <span class="mono" style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:3px; text-align:center; background:color-mix(in srgb, var(--pass) 15%, transparent); color:var(--pass);">✓ pass</span>
+    </div>
+    <div style="display:grid; grid-template-columns:140px 1fr 100px; gap:16px; align-items:center; padding:16px 0; font-size:14px;">
+      <span class="mono" style="font-weight:500;">gate 3</span>
+      <span style="color:var(--text-secondary);">your test suite runs, on your machine, against your tests</span>
+      <span class="mono" style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:3px; text-align:center; background:color-mix(in srgb, var(--pass) 15%, transparent); color:var(--pass);">✓ pass</span>
+    </div>
+  </section>
+
+  <section style="padding:64px 0; border-top:1px solid var(--hairline);">
+    <div style="font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      the verification receipt
+    </div>
+    <h2 style="font-size:28px; font-weight:700; margin-bottom:16px; max-width:600px;">
+      Every PR states which gates ran. Every time.
+    </h2>
+    <p style="color:var(--text-secondary); font-size:16px; max-width:640px; margin-bottom:40px;">
+      {pilotDelivery?.data.value}. Gate 3 runs in the normal case. The disclosed-skip path exists
+      for the hosted environment and is drawn with equal weight, not hidden.
+    </p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:32px;">
+      <div style="background:var(--surface); border:1px solid var(--hairline); border-radius:8px; padding:20px;">
+        <div class="mono" style="font-size:11px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:8px;">gate 3 · normal case</div>
+        <span class="mono" style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:3px; display:inline-block; margin-bottom:12px; background:color-mix(in srgb, var(--pass) 15%, transparent); color:var(--pass);">✓ pass</span>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.6;">
+          <strong style="color:var(--ink);">Gate 3 (test suite):</strong> PASS — your test suite ran and passed. All three gates verified.
+        </p>
+      </div>
+      <div style="background:var(--surface); border:1px solid var(--hairline); border-radius:8px; padding:20px;">
+        <div class="mono" style="font-size:11px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:8px;">gate 3 · disclosed edge case</div>
+        <span class="mono" style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:3px; display:inline-block; margin-bottom:12px; background:color-mix(in srgb, var(--skip) 15%, transparent); color:var(--skip);">– skipped</span>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.6;">
+          <strong style="color:var(--ink);">Gate 3 (test suite):</strong> SKIPPED — no test runner was available in this environment, so this fix was not validated against your tests. Gates 1 and 2 passed: the flagged rule no longer fires, and the change stays inside the authorised lines. Run your suite before merging.
+        </p>
+      </div>
+    </div>
+
+    <div class="mono" style="margin-top:24px; font-size:13px; color:var(--text-secondary); border-left:2px solid var(--link); padding-left:14px;">
+      // status is never colour alone — every state ships as word + icon + colour.
+    </div>
+  </section>
+
+  <section style="padding:64px 0; border-top:1px solid var(--hairline);">
+    <div style="font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      proof
+    </div>
+    <h2 style="font-size:28px; font-weight:700; margin-bottom:16px; max-width:600px;">
+      {testCount?.data.value} · {coverage?.data.value} coverage
+    </h2>
+    <p style="color:var(--text-secondary); font-size:16px; max-width:640px;">
+      Pulled live from the site's own <a href="/facts" style="color:var(--link);">canonical facts ledger</a> —
+      not hand-typed into this page. If it goes stale, it's wrong in exactly one place to fix.
+    </p>
+  </section>
+</Layout>

@@ -1,0 +1,67 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getEntry } from 'astro:content';
+
+const gate3 = await getEntry('facts', 'gate-3-behavior');
+const dataBoundary = await getEntry('facts', 'anthropic-data-boundary');
+const pilotDelivery = await getEntry('facts', 'pilot-delivery');
+const scannerList = await getEntry('facts', 'scanner-list');
+---
+
+<Layout
+  title="Patchward — limits"
+  description="What Patchward does and does not guarantee, stated plainly."
+>
+  <section style="padding:64px 0;">
+    <div style="font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      honesty page
+    </div>
+    <h1 style="font-size:36px; font-weight:700; margin-bottom:16px; max-width:600px;">
+      What Patchward does not guarantee.
+    </h1>
+    <p style="color:var(--text-secondary); font-size:16px; max-width:640px; margin-bottom:48px;">
+      This page states plainly what the product does not cover, not as fine print, but as the
+      same-weight counterpart to the claims on the front page. Numbers here are quoted from
+      <a href="/facts" style="color:var(--link);">/facts</a>, not restated by hand.
+    </p>
+
+    <div style="margin-bottom:36px;">
+      <h2 style="font-size:18px; font-weight:600; margin-bottom:8px;">Scanner scope</h2>
+      <p style="color:var(--text-secondary); font-size:15px; line-height:1.6;">
+        Patchward runs {scannerList?.data.value}. It does not run every possible static
+        analyzer, and a finding class outside these five's coverage will not be caught.
+      </p>
+    </div>
+
+    <div style="margin-bottom:36px;">
+      <h2 style="font-size:18px; font-weight:600; margin-bottom:8px;">Gate 3 — the test suite gate</h2>
+      <p style="color:var(--text-secondary); font-size:15px; line-height:1.6;">
+        {gate3?.data.value}
+      </p>
+    </div>
+
+    <div style="margin-bottom:36px;">
+      <h2 style="font-size:18px; font-weight:600; margin-bottom:8px;">Where your code goes</h2>
+      <p style="color:var(--text-secondary); font-size:15px; line-height:1.6;">
+        {dataBoundary?.data.value}
+      </p>
+    </div>
+
+    <div style="margin-bottom:36px;">
+      <h2 style="font-size:18px; font-weight:600; margin-bottom:8px;">How a pilot is delivered today</h2>
+      <p style="color:var(--text-secondary); font-size:15px; line-height:1.6;">
+        {pilotDelivery?.data.value}. This is a present-tense fact about how the product is used
+        today, not a permanent architectural claim — it will be revisited as the hosted path
+        takes on real installations.
+      </p>
+    </div>
+
+    <div>
+      <h2 style="font-size:18px; font-weight:600; margin-bottom:8px;">Review responsibility</h2>
+      <p style="color:var(--text-secondary); font-size:15px; line-height:1.6;">
+        Patchward opens a draft PR. It does not merge to your main branch under any
+        circumstance. Your team reviews and merges every change.
+      </p>
+    </div>
+  </section>
+</Layout>
