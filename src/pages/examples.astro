@@ -1,0 +1,140 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getEntry } from 'astro:content';
+
+// Lookbook §12.2 proof taxonomy: outcome labels are literal, never
+// optimistic. checkdmarc#261 is "closed — superseded", never "merged".
+// A wrong label here is the exact overclaim class the whole design
+// exists to prevent — so every claim on this page is ledger-sourced.
+const merged = await getEntry('facts', 'example-prs-patchward');
+const checkdmarc = await getEntry('facts', 'example-pr-checkdmarc');
+const pilotDelivery = await getEntry('facts', 'pilot-delivery');
+const branchConvention = await getEntry('facts', 'branch-convention');
+---
+
+<Layout
+  title="Patchward — examples"
+  description="Real Patchward pull requests against real repositories, with literal outcome labels — merged, closed, superseded — not optimistic ones."
+>
+  <section style="padding:80px 0 64px;">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:20px;">
+      examples
+    </div>
+    <h1 style="font-size:44px; font-weight:700; line-height:1.15; letter-spacing:-0.01em; max-width:700px;">
+      Real PRs, labelled literally.
+    </h1>
+    <p style="font-size:18px; color:var(--text-secondary); max-width:660px; margin:24px 0 0; line-height:1.6;">
+      Patchward has opened fix PRs against public repositories maintained by people with no
+      reason to be kind about it. Outcomes below use literal labels — merged, closed, superseded,
+      open. A PR that did not merge is not described as though it did.
+    </p>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      outcome vocabulary
+    </div>
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:20px; max-width:620px;">
+      Four labels. No fifth, softer one.
+    </h2>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <span class="mono" style="font-size:12px; font-weight:600; padding:6px 12px; border-radius:3px; background:color-mix(in srgb, var(--pass) 15%, transparent); color:var(--pass);">merged</span>
+      <span class="mono" style="font-size:12px; font-weight:600; padding:6px 12px; border-radius:3px; background:color-mix(in srgb, var(--pass) 15%, transparent); color:var(--pass);">maintainer follow-up shipped</span>
+      <span class="mono" style="font-size:12px; font-weight:600; padding:6px 12px; border-radius:3px; background:color-mix(in srgb, var(--skip) 15%, transparent); color:var(--skip);">closed — superseded</span>
+      <span class="mono" style="font-size:12px; font-weight:600; padding:6px 12px; border-radius:3px; background:color-mix(in srgb, var(--text-secondary) 15%, transparent); color:var(--text-secondary);">open</span>
+    </div>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      case · checkdmarc
+    </div>
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:20px; max-width:620px;">
+      The finding shipped. The PR did not.
+    </h2>
+
+    <div style="border:1px solid var(--hairline); border-radius:8px; background:var(--surface); padding:24px;">
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+        <a href="https://github.com/domainaware/checkdmarc/pull/261" class="mono" style="font-size:14px; font-weight:600; color:var(--link); text-decoration:none;">
+          checkdmarc#261 →
+        </a>
+        <span class="mono" style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:3px; background:color-mix(in srgb, var(--skip) 15%, transparent); color:var(--skip);">
+          – closed — superseded
+        </span>
+      </div>
+      <p style="font-size:15px; line-height:1.65; color:var(--text-secondary);">{checkdmarc?.data.value}</p>
+      <p class="mono" style="margin-top:14px; font-size:12px; color:var(--text-secondary);">
+        verified {checkdmarc?.data.verified.toISOString().slice(0, 10)}
+      </p>
+    </div>
+
+    <p style="color:var(--text-secondary); font-size:16px; max-width:660px; margin-top:24px;">
+      This is the example worth reading closely, and it is why the label matters. A page willing
+      to call this one "merged" would be a page you could not trust on anything else. The
+      scanner found a real defect; the maintainer chose a narrower fix than the one proposed and
+      shipped his own. That is a good outcome and an unmerged PR at the same time.
+    </p>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      case · mpfb2
+    </div>
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:20px; max-width:620px;">
+      Merged, and counted rather than cherry-picked.
+    </h2>
+
+    <div style="border:1px solid var(--hairline); border-radius:8px; background:var(--surface); padding:24px;">
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+        <span class="mono" style="font-size:14px; font-weight:600;">mpfb2</span>
+        <span class="mono" style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:3px; background:color-mix(in srgb, var(--pass) 15%, transparent); color:var(--pass);">
+          ✓ merged
+        </span>
+      </div>
+      <p style="font-size:15px; line-height:1.65; color:var(--text-secondary);">{merged?.data.value}</p>
+      <p class="mono" style="margin-top:14px; font-size:12px; color:var(--text-secondary);">
+        verified {merged?.data.verified.toISOString().slice(0, 10)}
+      </p>
+    </div>
+
+    <p style="color:var(--text-secondary); font-size:16px; max-width:660px; margin-top:24px;">
+      Note what is missing: individual links. Attributing specific merged PR numbers to Patchward
+      rather than to its sibling tool is not something any source available to this site supports,
+      so the count is stated and the links are withheld. An unverifiable link is worse than no
+      link.
+    </p>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      what you get in a pilot
+    </div>
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:20px; max-width:620px;">
+      The same artefacts, against your repository.
+    </h2>
+    <div style="display:grid; grid-template-columns:150px 1fr; gap:16px; align-items:baseline; padding:14px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+      <span class="mono" style="font-weight:500;">delivery</span>
+      <span style="color:var(--text-secondary);">{pilotDelivery?.data.value}</span>
+    </div>
+    <div style="display:grid; grid-template-columns:150px 1fr; gap:16px; align-items:baseline; padding:14px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+      <span class="mono" style="font-weight:500;">branch</span>
+      <span class="mono" style="color:var(--text-secondary);">{branchConvention?.data.value}</span>
+    </div>
+    <div style="display:grid; grid-template-columns:150px 1fr; gap:16px; align-items:baseline; padding:14px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+      <span class="mono" style="font-weight:500;">receipt</span>
+      <span style="color:var(--text-secondary);">
+        every gate on its own row — see <a href="/verification" style="color:var(--link);">/verification</a>
+      </span>
+    </div>
+    <div style="display:grid; grid-template-columns:150px 1fr; gap:16px; align-items:baseline; padding:14px 0; font-size:14px;">
+      <span class="mono" style="font-weight:500;">your main branch</span>
+      <span style="color:var(--text-secondary);">untouched — rollback is one <span class="mono">git branch -D</span></span>
+    </div>
+
+    <div style="margin-top:36px;">
+      <a href="mailto:yehor@callmedai.com?subject=Patchward%20pilot" class="mono" style="font-size:14px; font-weight:500; background:var(--accent); color:var(--canvas); padding:13px 22px; border-radius:4px; text-decoration:none; display:inline-block;">
+        Request a pilot →
+      </a>
+    </div>
+  </section>
+</Layout>

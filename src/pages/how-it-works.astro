@@ -1,0 +1,155 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getEntry } from 'astro:content';
+
+// Every stated fact on this page is pulled from the facts collection,
+// never hand-typed. Lookbook §12.1 truth contract.
+const scannerList = await getEntry('facts', 'scanner-list');
+const installCommand = await getEntry('facts', 'install-command');
+const pythonRequirement = await getEntry('facts', 'python-requirement');
+const branchConvention = await getEntry('facts', 'branch-convention');
+const gate3 = await getEntry('facts', 'gate-3-behavior');
+
+const scanners = (scannerList?.data.value ?? '').split(',').map((s) => s.trim());
+---
+
+<Layout
+  title="Patchward — how it works"
+  description="Five scanners normalize to SARIF, one finding becomes one bounded patch, and three gates run before a draft PR is opened."
+>
+  <section style="padding:80px 0 64px;">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:20px;">
+      how it works
+    </div>
+    <h1 style="font-size:44px; font-weight:700; line-height:1.15; letter-spacing:-0.01em; max-width:700px;">
+      One finding. One bounded patch. Three gates, recorded.
+    </h1>
+    <p style="font-size:18px; color:var(--text-secondary); max-width:660px; margin:24px 0 0; line-height:1.6;">
+      Patchward opens draft pull requests with a recorded verification receipt. That is the
+      invariant — it holds on every run, in every environment. What follows is the mechanism
+      that produces it.
+    </p>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      stage 1 · scan
+    </div>
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:16px; max-width:620px;">
+      Five scanners run in parallel, on your machine.
+    </h2>
+    <p style="color:var(--text-secondary); font-size:16px; max-width:660px; margin-bottom:32px;">
+      Static analysis runs inside a Docker sandbox with default-deny network egress. Each scanner
+      is an independent input lane; their findings converge on a single SARIF normalization point
+      so that everything downstream reasons about one format, not five.
+    </p>
+
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+      {scanners.map((scanner, i) => (
+        <>
+          <span class="mono" style="font-size:13px; padding:8px 14px; border:1px solid var(--hairline); border-radius:4px; background:var(--surface);">
+            {scanner.toLowerCase()}
+          </span>
+          {i < scanners.length - 1 && <span style="color:var(--text-secondary); font-size:14px;">+</span>}
+        </>
+      ))}
+      <span style="color:var(--text-secondary); font-size:14px;">→</span>
+      <span class="mono" style="font-size:13px; padding:8px 14px; border:1px solid var(--accent); border-radius:4px; color:var(--accent);">sarif</span>
+    </div>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      stage 2 · triage &amp; fix
+    </div>
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:16px; max-width:620px;">
+      One finding at a time. Never a sweep.
+    </h2>
+    <p style="color:var(--text-secondary); font-size:16px; max-width:660px; margin-bottom:24px;">
+      Normalized findings are triaged by severity, then handed to fix generation one at a time.
+      The patch is written against a single finding with declared line bounds — so the review
+      surface stays small enough that a human can actually check it.
+    </p>
+    <p style="color:var(--text-secondary); font-size:16px; max-width:660px;">
+      These two stages call the Anthropic API and read repository file contents to do their work.
+      That crossing point is documented in full on
+      <a href="/data-boundary" style="color:var(--link);">/data-boundary</a> — it is a design
+      choice, stated plainly, not a footnote.
+    </p>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      stage 3 · verify
+    </div>
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:16px; max-width:620px;">
+      Three gates, in order, every run.
+    </h2>
+    <p style="color:var(--text-secondary); font-size:16px; max-width:660px; margin-bottom:36px;">
+      A patch that fails a gate is discarded and never reaches a pull request. Gate 3 has two
+      legitimate exits, and both are drawn here with equal weight — see
+      <a href="/verification" style="color:var(--link);">/verification</a> for the receipt itself.
+    </p>
+
+    <div style="display:grid; grid-template-columns:120px 1fr; gap:16px; align-items:baseline; padding:16px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+      <span class="mono" style="font-weight:500;">gate 1</span>
+      <span style="color:var(--text-secondary);">the scanner re-runs; the flagged rule must no longer fire</span>
+    </div>
+    <div style="display:grid; grid-template-columns:120px 1fr; gap:16px; align-items:baseline; padding:16px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+      <span class="mono" style="font-weight:500;">gate 2</span>
+      <span style="color:var(--text-secondary);">the diff must fall entirely inside the finding's declared line bounds</span>
+    </div>
+    <div style="display:grid; grid-template-columns:120px 1fr; gap:16px; align-items:baseline; padding:16px 0; font-size:14px;">
+      <span class="mono" style="font-weight:500;">gate 3</span>
+      <span style="color:var(--text-secondary);">{gate3?.data.value}</span>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:28px;">
+      <div style="border:1px solid var(--hairline); border-radius:6px; padding:16px; background:var(--surface);">
+        <span class="mono" style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:3px; display:inline-block; background:color-mix(in srgb, var(--pass) 15%, transparent); color:var(--pass);">✓ pass</span>
+        <p style="margin-top:10px; font-size:14px; color:var(--text-secondary);">exit A — your suite ran and passed</p>
+      </div>
+      <div style="border:1px solid var(--hairline); border-radius:6px; padding:16px; background:var(--surface);">
+        <span class="mono" style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:3px; display:inline-block; background:color-mix(in srgb, var(--skip) 15%, transparent); color:var(--skip);">– skipped</span>
+        <p style="margin-top:10px; font-size:14px; color:var(--text-secondary);">exit B — no runner present, disclosed in the PR</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      stage 4 · deliver
+    </div>
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:16px; max-width:620px;">
+      A draft PR on its own branch. Never your main.
+    </h2>
+    <p style="color:var(--text-secondary); font-size:16px; max-width:660px; margin-bottom:28px;">
+      Every mutation lands on a dedicated branch. Worst-case rollback is one
+      <span class="mono" style="font-size:14px;">git branch -D</span>.
+    </p>
+    <div style="border:1px solid var(--hairline); border-radius:6px; padding:20px; background:var(--surface);">
+      <div class="mono" style="font-size:11px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:10px;">branch convention</div>
+      <div class="mono" style="font-size:15px; color:var(--ink);">{branchConvention?.data.value}</div>
+    </div>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      run it
+    </div>
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:20px; max-width:620px;">
+      Install once. Point it at a repository.
+    </h2>
+    <div style="border:1px solid var(--hairline); border-radius:6px; padding:20px; background:var(--surface); margin-bottom:16px;">
+      <div class="mono" style="font-size:15px; color:var(--ink);">{installCommand?.data.value}</div>
+    </div>
+    <p class="mono" style="font-size:13px; color:var(--text-secondary);">
+      requires python {pythonRequirement?.data.value}
+    </p>
+    <p style="color:var(--text-secondary); font-size:16px; max-width:660px; margin-top:28px;">
+      Where this stops short is written down, not implied — see
+      <a href="/limits" style="color:var(--link);">/limits</a>, and every number quoted on this
+      page in <a href="/facts" style="color:var(--link);">/facts</a>.
+    </p>
+  </section>
+</Layout>

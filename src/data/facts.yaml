@@ -65,3 +65,35 @@
   value: ">=3.12"
   verified: 2026-08-11
   source: "pyproject.toml"
+
+- id: branch-convention
+  value: "patchward/fix-<finding-id>"
+  verified: 2026-08-11
+  source: "fix_worktree.py source, directly inspected; lookbook §10"
+
+- id: example-prs-patchward
+  value: >-
+    2 Patchward security-fix PRs merged, both on mpfb2. Which two of the
+    nine merged mpfb2 PRs are Patchward's is not distinguished by any
+    source available to this site, so they are stated as a count and not
+    linked individually.
+  verified: 2026-08-20
+  source: >-
+    callmedai.com live copy, read 2026-08-20 ("11 PRs merged across
+    mpfb2, aeon, and mellea — 9 Symbiote type-annotation PRs plus 2
+    Patchward security fixes, both on mpfb2"). The non-attribution is
+    itself the verified finding, per lookbook §12.2's rule that an
+    outcome label must be literal rather than optimistic.
+
+- id: example-pr-checkdmarc
+  value: >-
+    checkdmarc#261 — Patchward flagged a Bandit B110 (try/except/pass)
+    finding. Outcome label: closed — superseded. The PR itself was
+    closed with unmerged commits; the maintainer reviewed it, narrowed
+    the exception catch to UnicodeError, and shipped that fix in
+    v5.17.3. The finding shipped; this PR did not.
+  verified: 2026-08-20
+  source: >-
+    Outcome label verified directly against the PR 2026-08-11 ("Closed
+    with unmerged commits", lookbook §12.2); maintainer follow-up and
+    v5.17.3 cross-checked against callmedai.com live copy 2026-08-20.

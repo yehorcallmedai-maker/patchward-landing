@@ -1,0 +1,141 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getEntry } from 'astro:content';
+
+// Lookbook §6: the data-boundary diagram must explicitly label the
+// crossing point where repository content leaves the sandbox. D11's
+// requirement made visual, not just textual.
+const dataBoundary = await getEntry('facts', 'anthropic-data-boundary');
+const scannerList = await getEntry('facts', 'scanner-list');
+const scanners = (scannerList?.data.value ?? '').split(',').map((s) => s.trim());
+---
+
+<Layout
+  title="Patchward — the data boundary"
+  description="Which Patchward stages run locally, which call the Anthropic API, and exactly where repository content crosses the line."
+>
+  <section style="padding:80px 0 64px;">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:20px;">
+      the data boundary
+    </div>
+    <h1 style="font-size:44px; font-weight:700; line-height:1.15; letter-spacing:-0.01em; max-width:700px;">
+      Scanning is local. Two stages are not. Here is the line.
+    </h1>
+    <p style="font-size:18px; color:var(--text-secondary); max-width:660px; margin:24px 0 0; line-height:1.6;">
+      Patchward runs in your environment, under your credentials, against your repository. Static
+      analysis never leaves the sandbox. Two stages — triage and fix generation — do call out, and
+      this page marks exactly where and with what.
+    </p>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:32px; max-width:620px;">
+      The crossing point, drawn.
+    </h2>
+
+    <div style="border:1px solid var(--hairline); border-radius:8px; overflow:hidden;">
+      <div style="padding:20px; background:var(--surface);">
+        <div class="mono" style="font-size:11px; color:var(--pass); text-transform:lowercase; margin-bottom:14px; font-weight:600;">
+          ■ inside your environment — network-isolated
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+          {scanners.map((scanner) => (
+            <span class="mono" style="font-size:12px; padding:6px 12px; border:1px solid var(--hairline); border-radius:4px; background:var(--canvas);">
+              {scanner.toLowerCase()}
+            </span>
+          ))}
+        </div>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.6; margin:0;">
+          Docker sandbox, default-deny egress. Most scanners run fully offline; dependency
+          auditors get a narrow allowlisted exception to reach their vulnerability databases —
+          they send package names, not your source.
+        </p>
+      </div>
+
+      <div style="padding:16px 20px; border-top:2px solid var(--accent); border-bottom:2px solid var(--accent); background:color-mix(in srgb, var(--accent) 8%, transparent);">
+        <div class="mono" style="font-size:12px; font-weight:700; color:var(--accent); text-transform:lowercase; letter-spacing:0.02em;">
+          ▼ crossing point — repository file contents leave your environment here ▼
+        </div>
+      </div>
+
+      <div style="padding:20px; background:var(--surface);">
+        <div class="mono" style="font-size:11px; color:var(--skip); text-transform:lowercase; margin-bottom:14px; font-weight:600;">
+          ■ outbound — the anthropic api, called from your environment
+        </div>
+        <div style="display:grid; grid-template-columns:140px 1fr; gap:16px; align-items:baseline; padding:10px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+          <span class="mono" style="font-weight:500;">triage</span>
+          <span style="color:var(--text-secondary);">reviews scanner findings; may read additional files for context</span>
+        </div>
+        <div style="display:grid; grid-template-columns:140px 1fr; gap:16px; align-items:baseline; padding:10px 0; font-size:14px;">
+          <span class="mono" style="font-weight:500;">fix generation</span>
+          <span style="color:var(--text-secondary);">reads the relevant file before editing it, or declining the fix</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="mono" style="margin-top:20px; font-size:13px; color:var(--text-secondary); border-left:2px solid var(--link); padding-left:14px;">
+      // both stages can read any file in the scanned repository, not only the flagged lines —
+      a deliberate design choice so the model has enough context to produce a correct fix.
+    </p>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      the canonical statement
+    </div>
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:20px; max-width:620px;">
+      Said once, in one place, dated.
+    </h2>
+    <blockquote style="border-left:2px solid var(--accent); padding:4px 0 4px 20px; margin:0 0 20px; max-width:660px;">
+      <p style="font-size:17px; line-height:1.65; color:var(--ink);">{dataBoundary?.data.value}</p>
+    </blockquote>
+    <p class="mono" style="font-size:12px; color:var(--text-secondary);">
+      verified {dataBoundary?.data.verified.toISOString().slice(0, 10)} · source: {dataBoundary?.data.source}
+    </p>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      scrubbing · what it covers and what it doesn't
+    </div>
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:20px; max-width:620px;">
+      The boundary is drawn at the container, and we say so.
+    </h2>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+      <div style="background:var(--surface); border:1px solid var(--hairline); border-radius:8px; padding:20px;">
+        <div class="mono" style="font-size:11px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:10px;">covered</div>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.6;">
+          API keys and repository tokens are loaded once into a credential proxy and structurally
+          excluded from every scanner container's environment, re-checked by a runtime assertion
+          before each container starts. Scanner finding messages are scrubbed to
+          <span class="mono">[scrubbed]</span> before reaching logs or CLI output — a visible
+          placeholder, so you can see the scrubbing happened.
+        </p>
+      </div>
+      <div style="background:var(--surface); border:1px solid var(--hairline); border-radius:8px; padding:20px;">
+        <div class="mono" style="font-size:11px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:10px;">not covered</div>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.6;">
+          Text generated by the triage or fix-generation stages is not covered by that scrubbing.
+          Neither is what those stages send to the Anthropic API — scrubbing protects Patchward's
+          own local output, not the outbound request. This is the distinction most security pages
+          blur; it is the reason this page exists.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:16px; max-width:620px;">
+      If this boundary is the wrong shape for your repository, say so early.
+    </h2>
+    <p style="color:var(--text-secondary); font-size:16px; max-width:660px; margin-bottom:28px;">
+      Zero Data Retention arrangements and processing agreements exist and can be put in place
+      before any engagement rather than after. The honest version of this conversation is cheaper
+      to have up front.
+    </p>
+    <a href="mailto:yehor@callmedai.com?subject=Patchward%20data%20boundary" class="mono" style="font-size:14px; font-weight:500; background:var(--accent); color:var(--canvas); padding:13px 22px; border-radius:4px; text-decoration:none; display:inline-block;">
+      Ask about the boundary →
+    </a>
+  </section>
+</Layout>

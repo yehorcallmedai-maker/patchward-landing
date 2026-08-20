@@ -1,0 +1,170 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getEntry } from 'astro:content';
+
+// Facts-ledger sourced. Lookbook §9 fixes the disclosure block's wording
+// as structure, not freehand copy — it is reproduced here verbatim.
+const testCount = await getEntry('facts', 'test-count');
+const coverage = await getEntry('facts', 'coverage');
+const gate3 = await getEntry('facts', 'gate-3-behavior');
+const pilotDelivery = await getEntry('facts', 'pilot-delivery');
+---
+
+<Layout
+  title="Patchward — the verification receipt"
+  description="Every Patchward PR carries a receipt naming which gates ran and which did not. The skipped state is disclosed with the same weight as the passing one."
+>
+  <section style="padding:80px 0 64px;">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:20px;">
+      the verification receipt
+    </div>
+    <h1 style="font-size:44px; font-weight:700; line-height:1.15; letter-spacing:-0.01em; max-width:700px;">
+      Every PR states which checks ran. Including the ones that didn't.
+    </h1>
+    <p style="font-size:18px; color:var(--text-secondary); max-width:660px; margin:24px 0 0; line-height:1.6;">
+      A bounded draft PR with a recorded verification receipt is what Patchward always delivers.
+      The receipt is not a summary written after the fact — it is the gate ledger itself, printed
+      into the PR body in a fixed order, every row present every time.
+    </p>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      gate 3 · two exits
+    </div>
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:16px; max-width:620px;">
+      Both outcomes are real. Both are drawn the same size.
+    </h2>
+    <p style="color:var(--text-secondary); font-size:16px; max-width:660px; margin-bottom:36px;">
+      {gate3?.data.value}
+    </p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+      <div style="background:var(--surface); border:1px solid var(--hairline); border-radius:8px; padding:20px;">
+        <div class="mono" style="font-size:11px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:8px;">gate 3 · normal case</div>
+        <span class="mono" style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:3px; display:inline-block; margin-bottom:12px; background:color-mix(in srgb, var(--pass) 15%, transparent); color:var(--pass);">✓ pass</span>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.6;">
+          <strong style="color:var(--ink);">Gate 3 (test suite):</strong> PASS — your test suite ran and passed. All three gates verified.
+        </p>
+      </div>
+      <div style="background:var(--surface); border:1px solid var(--hairline); border-radius:8px; padding:20px;">
+        <div class="mono" style="font-size:11px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:8px;">gate 3 · disclosed edge case</div>
+        <span class="mono" style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:3px; display:inline-block; margin-bottom:12px; background:color-mix(in srgb, var(--skip) 15%, transparent); color:var(--skip);">– skipped</span>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.6;">
+          <strong style="color:var(--ink);">Gate 3 (test suite):</strong> SKIPPED — no test runner was available in this environment, so this fix was not validated against your tests. Gates 1 and 2 passed: the flagged rule no longer fires, and the change stays inside the authorised lines. Run your suite before merging.
+        </p>
+      </div>
+    </div>
+
+    <div class="mono" style="margin-top:24px; font-size:13px; color:var(--text-secondary); border-left:2px solid var(--link); padding-left:14px;">
+      // status is never colour alone — every state ships as word + icon + colour.
+    </div>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      anatomy of the disclosure
+    </div>
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:16px; max-width:620px;">
+      Four parts, in this order, no hedging.
+    </h2>
+    <p style="color:var(--text-secondary); font-size:16px; max-width:660px; margin-bottom:32px;">
+      A reviewer scanning a PR needs the literal state before the narrative. So this one block
+      inverts the site's usual ordering deliberately.
+    </p>
+
+    <div style="display:grid; grid-template-columns:40px 180px 1fr; gap:16px; align-items:baseline; padding:14px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+      <span class="mono" style="color:var(--accent); font-weight:600;">01</span>
+      <span style="font-weight:600;">The literal state</span>
+      <span style="color:var(--text-secondary);">SKIPPED or PASS — first, before any explanation</span>
+    </div>
+    <div style="display:grid; grid-template-columns:40px 180px 1fr; gap:16px; align-items:baseline; padding:14px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+      <span class="mono" style="color:var(--accent); font-weight:600;">02</span>
+      <span style="font-weight:600;">The reason</span>
+      <span style="color:var(--text-secondary);">no test runner was available in this environment</span>
+    </div>
+    <div style="display:grid; grid-template-columns:40px 180px 1fr; gap:16px; align-items:baseline; padding:14px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+      <span class="mono" style="color:var(--accent); font-weight:600;">03</span>
+      <span style="font-weight:600;">What <em>was</em> verified</span>
+      <span style="color:var(--text-secondary);">Gates 1 and 2, named explicitly — not "partially checked"</span>
+    </div>
+    <div style="display:grid; grid-template-columns:40px 180px 1fr; gap:16px; align-items:baseline; padding:14px 0; font-size:14px;">
+      <span class="mono" style="color:var(--accent); font-weight:600;">04</span>
+      <span style="font-weight:600;">A reviewer action</span>
+      <span style="color:var(--text-secondary);">run your suite before merging</span>
+    </div>
+
+    <p style="color:var(--text-secondary); font-size:16px; max-width:660px; margin-top:28px;">
+      No apology, no hedge, no exclamation. The block states the fact, quantifies what was
+      verified, and hands the reviewer a next action.
+    </p>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      the pr body
+    </div>
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:16px; max-width:620px;">
+      Fixed sections. Every row, every time.
+    </h2>
+    <p style="color:var(--text-secondary); font-size:16px; max-width:660px; margin-bottom:32px;">
+      The template is not adaptive. A section is never dropped because it had nothing
+      interesting to say — an empty row is itself information.
+    </p>
+
+    <div style="border:1px solid var(--hairline); border-radius:8px; background:var(--surface); overflow:hidden;">
+      <div class="mono" style="font-size:11px; color:var(--text-secondary); text-transform:lowercase; padding:14px 20px; border-bottom:1px solid var(--hairline);">
+        pr body · fixed section order
+      </div>
+      <div style="padding:8px 20px 16px;">
+        <div style="display:grid; grid-template-columns:150px 1fr; gap:16px; align-items:baseline; padding:12px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+          <span class="mono" style="font-weight:500;">title</span>
+          <span class="mono" style="color:var(--text-secondary); font-size:13px;">fix: &lt;plain description&gt; (&lt;tool&gt; &lt;rule-id&gt;)</span>
+        </div>
+        <div style="display:grid; grid-template-columns:150px 1fr; gap:16px; align-items:baseline; padding:12px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+          <span class="mono" style="font-weight:500;">outcome</span>
+          <span style="color:var(--text-secondary);">scanner and rule, affected file:line, the bounded intent of the fix</span>
+        </div>
+        <div style="display:grid; grid-template-columns:150px 1fr; gap:16px; align-items:baseline; padding:12px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+          <span class="mono" style="font-weight:500;">finding</span>
+          <span style="color:var(--text-secondary);">what fired, and why it matters in this repository specifically</span>
+        </div>
+        <div style="display:grid; grid-template-columns:150px 1fr; gap:16px; align-items:baseline; padding:12px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+          <span class="mono" style="font-weight:500;">change</span>
+          <span style="color:var(--text-secondary);">the exact behavioural change — including what was deliberately <em>not</em> changed</span>
+        </div>
+        <div style="display:grid; grid-template-columns:150px 1fr; gap:16px; align-items:baseline; padding:12px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+          <span class="mono" style="font-weight:500;">receipt</span>
+          <span style="color:var(--text-secondary);">Gate 1, Gate 2, Gate 3 — three separate rows, never collapsed into one</span>
+        </div>
+        <div style="display:grid; grid-template-columns:150px 1fr; gap:16px; align-items:baseline; padding:12px 0; border-bottom:1px solid var(--hairline); font-size:14px;">
+          <span class="mono" style="font-weight:500;">reviewer notes</span>
+          <span style="color:var(--text-secondary);">residual uncertainty, repo conventions to check, the smallest useful question</span>
+        </div>
+        <div style="display:grid; grid-template-columns:150px 1fr; gap:16px; align-items:baseline; padding:12px 0; font-size:14px;">
+          <span class="mono" style="font-weight:500;">provenance</span>
+          <span style="color:var(--text-secondary);">generated and verified by Patchward — no invented run identifier</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:56px 0; border-top:1px solid var(--hairline);">
+    <div class="mono" style="font-size:12px; color:var(--text-secondary); text-transform:lowercase; margin-bottom:12px;">
+      what verifies the verifier
+    </div>
+    <h2 style="font-size:26px; font-weight:700; margin-bottom:16px; max-width:620px;">
+      {testCount?.data.value} · {coverage?.data.value} coverage
+    </h2>
+    <p style="color:var(--text-secondary); font-size:16px; max-width:660px; margin-bottom:20px;">
+      The gate pipeline is deterministic code, and it carries its own test suite. That figure is
+      quoted from the <a href="/facts" style="color:var(--link);">canonical facts ledger</a>, with
+      its verification date attached — not hand-typed into this page.
+    </p>
+    <p style="color:var(--text-secondary); font-size:16px; max-width:660px;">
+      The limit worth stating plainly: {pilotDelivery?.data.value}. See
+      <a href="/limits" style="color:var(--link);">/limits</a> for the rest of what this does not
+      yet do.
+    </p>
+  </section>
+</Layout>
