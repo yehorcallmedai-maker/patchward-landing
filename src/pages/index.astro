@@ -27,8 +27,8 @@ const pilotDelivery = await getEntry('facts', 'pilot-delivery');
       and opens one bounded fix PR at a time — with a receipt that states exactly what it checked.
     </p>
     <div style="display:flex; gap:16px; align-items:center;">
-      <a href="mailto:yehor@callmedai.com?subject=Patchward%20pilot" style="font-family:'JetBrains Mono', monospace; font-size:14px; font-weight:500; background:var(--accent); color:var(--canvas); padding:13px 22px; border-radius:4px; text-decoration:none; display:inline-block; border:none;">
-        Request a pilot →
+      <a href="https://github.com/yehorcallmedai-maker/Patchward" style="font-family:'JetBrains Mono', monospace; font-size:14px; font-weight:500; background:var(--accent); color:var(--canvas); padding:13px 22px; border-radius:4px; text-decoration:none; display:inline-block; border:none;">
+        Get it free on GitHub →
       </a>
       <a href="#mechanism" style="font-family:'JetBrains Mono', monospace; font-size:14px; color:var(--link); text-decoration:none;">
         See how it works
@@ -88,8 +88,8 @@ const pilotDelivery = await getEntry('facts', 'pilot-delivery');
       Every PR states which gates ran. Every time.
     </h2>
     <p style="color:var(--text-secondary); font-size:16px; max-width:640px; margin-bottom:40px;">
-      {pilotDelivery?.data.value}. Gate 3 runs in the normal case. The disclosed-skip path exists
-      for the hosted environment and is drawn with equal weight, not hidden.
+      {pilotDelivery?.data.value} Gate 3 runs in the normal case. The disclosed-skip path exists
+      for any environment without a detected test runner and is drawn with equal weight, not hidden.
     </p>
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:32px;">

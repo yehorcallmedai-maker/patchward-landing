@@ -26,17 +26,22 @@
   source: "src/patchward/ pipeline source, directly inspected"
 
 - id: pilot-delivery
-  value: "CLI, run by Yehor directly against the customer's own repository"
-  verified: 2026-08-11
+  value: >-
+    Free, self-hosted CLI. Install it yourself (`uv tool install
+    patchward`) and run it with your own Anthropic API key and GitHub
+    token — your code and credentials never pass through Patchward's own
+    infrastructure. There is no hosted service, no paid tier, and no
+    sales process.
+  verified: 2026-09-11
   source: >-
-    Triangulated from three independent Tier-0 findings: the live
-    callmedai.com pilot CTA is a plain mailto: link with no App-install
-    flow; the one real example PR (checkdmarc#261) was opened from a
-    personal fork six weeks before the hosted path could push a PR with
-    a working token (item 21 shipped 2026-08-05); and Patchward's own
-    project memory still names "first paying Marketplace install" as an
-    open goal as of its most recent session close. See build doc
-    Decision 9.
+    Decision made 2026-09-11 (Yehor Kaliberda): Patchward licensed MIT
+    and the paid GitHub Marketplace / hosted-webhook path formally
+    dropped in favor of staying a free, self-hosted tool. Confirmed
+    against the LICENSE file and the `license` field added to
+    pyproject.toml the same date. Supersedes the prior entry, which
+    described the pre-decision pilot-delivery state (Yehor running the
+    CLI manually against a customer's repository) — that was accurate
+    as of 2026-08-11 and is not retracted, just superseded.
 
 - id: gate-3-behavior
   value: >-
