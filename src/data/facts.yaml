@@ -78,17 +78,21 @@
 
 - id: example-prs-patchward
   value: >-
-    2 Patchward security-fix PRs merged, both on mpfb2. Which two of the
-    nine merged mpfb2 PRs are Patchward's is not distinguished by any
-    source available to this site, so they are stated as a count and not
-    linked individually.
-  verified: 2026-08-20
+    2 Patchward security-fix PRs merged, both on mpfb2: #398 (replaces
+    assert statements and random.randrange in src/mpfb/entities/rig.py)
+    and #399 (Bandit fixes in two scripts under src/loose_scripts/). Both
+    merged by the mpfb2 maintainer on 2026-07-03.
+  verified: 2026-10-05
   source: >-
-    callmedai.com live copy, read 2026-08-20 ("11 PRs merged across
-    mpfb2, aeon, and mellea — 9 Symbiote type-annotation PRs plus 2
-    Patchward security fixes, both on mpfb2"). The non-attribution is
-    itself the verified finding, per lookbook §12.2's rule that an
-    outcome label must be literal rather than optimistic.
+    mpfb2 master branch, read from a fresh clone 2026-10-05: merge commits
+    b180c313 ("Merge pull request #398 from
+    yehorcallmedai-maker/repomend/fix-bandit.B101-all") and 768fd888
+    ("Merge pull request #399 from
+    yehorcallmedai-maker/repomend/fix-bandit.loose-scripts"), both
+    ancestors of master. Attributed to Patchward by branch prefix
+    (repomend/ — RepoMend is Patchward's former name) and confirmed by
+    Yehor. Supersedes the 2026-08-20 entry, which stated the two PRs
+    could not be individually identified.
 
 - id: example-pr-checkdmarc
   value: >-
