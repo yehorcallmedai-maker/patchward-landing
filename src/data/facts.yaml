@@ -78,10 +78,15 @@
 
 - id: example-prs-patchward
   value: >-
-    2 Patchward security-fix PRs merged, both on mpfb2: #398 (replaces
-    assert statements and random.randrange in src/mpfb/entities/rig.py)
-    and #399 (Bandit fixes in two scripts under src/loose_scripts/). Both
-    merged by the mpfb2 maintainer on 2026-07-03.
+    2 security-fix PRs merged on mpfb2, both made under RepoMend's branch
+    convention (RepoMend was Patchward's name until 2026-07-07): #398
+    (replaces assert statements and random.randrange in
+    src/mpfb/entities/rig.py) and #399 (Bandit fixes in two scripts under
+    src/loose_scripts/). Both merged by the mpfb2 maintainer on
+    2026-07-03. The commits are authored under the Symbiote git identity
+    and signed off by Yehor Kaliberda. Whether each patch came out of the
+    RepoMend pipeline end to end, or was written or reworked by hand, is
+    not recorded, so it is not claimed.
   verified: 2026-10-05
   source: >-
     mpfb2 master branch, read from a fresh clone 2026-10-05: merge commits
@@ -89,10 +94,13 @@
     yehorcallmedai-maker/repomend/fix-bandit.B101-all") and 768fd888
     ("Merge pull request #399 from
     yehorcallmedai-maker/repomend/fix-bandit.loose-scripts"), both
-    ancestors of master. Attributed to Patchward by branch prefix
-    (repomend/ — RepoMend is Patchward's former name) and confirmed by
-    Yehor. Supersedes the 2026-08-20 entry, which stated the two PRs
-    could not be individually identified.
+    ancestors of master; PR head commits 530fe81b and 61a43099 (author
+    "Symbiote", Signed-off-by Yehor Kaliberda). Branch convention
+    "repomend/fix-<finding-id>" from RepoMend's fix-gen spec at Patchward
+    commit edebac0 (2026-06-24); rename at c27ea40 (2026-07-07). Pipeline
+    provenance stated as unknown by Yehor, 2026-10-05. Supersedes the
+    2026-08-20 entry (PRs not individually identified) and an earlier
+    2026-10-05 wording that attributed both PRs to Patchward outright.
 
 - id: example-pr-checkdmarc
   value: >-
